@@ -11,8 +11,8 @@ import java.util.List;
 @Entity
 @Data
 @AllArgsConstructor
-public class Student {
-    public Student(){}
+public class Teacher {
+    public Teacher(){}
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -23,6 +23,6 @@ public class Student {
     private String lastName;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "students")
+    @ManyToMany(mappedBy = "teachers")
     private List<Class> classes;
 }

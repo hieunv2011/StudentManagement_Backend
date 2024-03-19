@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -28,4 +29,12 @@ public class StudentServiceImpl implements StudentService {
 //    public boolean login(String username, String password) {
 //        return username.equals(VALID_USERNAME) && password.equals(VALID_PASSWORD);
 //    }
+    @Override
+    public List<Student> getStudentsByClassId(int class_id) {
+    return studentRepository.findStudentsByClassId(class_id);
+    }
+    @Override
+    public Optional<Student> getStudentById(int id) {
+        return studentRepository.findById(id);
+    }
 }

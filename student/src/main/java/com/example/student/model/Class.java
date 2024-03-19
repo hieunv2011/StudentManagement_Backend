@@ -1,11 +1,15 @@
 package com.example.student.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+import java.util.List;
 
 @Entity
+@Data
+@AllArgsConstructor
 public class Class {
     public Class(){}
     @Id
@@ -13,64 +17,27 @@ public class Class {
     private int id;
     private String mahocphan;
     private String malop;
+    private String tenhocphan;
     private  String room;
     private String studentnumber;
-    private String teachername;
+//    private String teachername;
     private String time;
 
-    public int getId() {
-        return id;
-    }
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+            name = "class_students",
+            joinColumns = @JoinColumn(name = "class_id"),
+            inverseJoinColumns = @JoinColumn(name = "student_id")
+    )
+    private List<Student> students;
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getMahocphan() {
-        return mahocphan;
-    }
-
-    public void setMahocphan(String mahocphan) {
-        this.mahocphan = mahocphan;
-    }
-
-    public String getMalop() {
-        return malop;
-    }
-
-    public void setMalop(String malop) {
-        this.malop = malop;
-    }
-
-    public String getRoom() {
-        return room;
-    }
-
-    public void setRoom(String room) {
-        this.room = room;
-    }
-
-    public String getStudentnumber() {
-        return studentnumber;
-    }
-
-    public void setStudentnumber(String studentnumber) {
-        this.studentnumber = studentnumber;
-    }
-
-    public String getTeachername() {
-        return teachername;
-    }
-
-    public void setTeachername(String teachername) {
-        this.teachername = teachername;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
-    }
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+            name = "class_teachers",
+            joinColumns = @JoinColumn(name = "class_id"),
+            inverseJoinColumns = @JoinColumn(name = "teacher_id")
+    )
+    private List<Teacher> teachers;
 }
