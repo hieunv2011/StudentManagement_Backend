@@ -11,5 +11,7 @@ public interface StudentService {
 //    boolean login(String username, String password);
 
     List<Student> getStudentsByClassId(int class_id);
-    Optional<Student> getStudentById(int id); //
+    Optional<Student> getStudentById(int id);
+    List<Student> searchStudents(String firstName, String lastName, Integer id, String email);
+
 }

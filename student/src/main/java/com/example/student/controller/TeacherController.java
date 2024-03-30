@@ -3,6 +3,8 @@ package com.example.student.controller;
 import com.example.student.model.Teacher;
 import com.example.student.service.ClassServiceImpl;
 import com.example.student.service.TeacherService;
+import com.example.student.service.TeacherServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,11 +14,18 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/teacher")
+@RequestMapping("api/v1/teacher")
+@RequiredArgsConstructor
 @CrossOrigin
 public class TeacherController {
     @Autowired
     private TeacherService teacherService;
+
+
+    @GetMapping
+    public ResponseEntity<String> sayHello(){
+        return ResponseEntity.ok("Hi Teacher");
+    }
 
     @PostMapping("/add")
     public String add(@RequestBody Teacher teacher){

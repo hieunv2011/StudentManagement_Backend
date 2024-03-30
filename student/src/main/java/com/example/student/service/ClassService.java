@@ -16,4 +16,6 @@ public interface ClassService {
     List<Class> getClassesByStudentId(int student_id);
     Optional<Class> getClassInformationById(int id);
 
+    void removeStudentFromClass(int classId, int studentId);
+
 }

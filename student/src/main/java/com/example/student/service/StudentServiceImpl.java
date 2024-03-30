@@ -5,6 +5,7 @@ import com.example.student.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +14,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Autowired
     private StudentRepository studentRepository;
+
     @Override
     public Student saveStudent(Student student) {
         return studentRepository.save(student);
@@ -37,4 +39,23 @@ public class StudentServiceImpl implements StudentService {
     public Optional<Student> getStudentById(int id) {
         return studentRepository.findById(id);
     }
+
+    @Override
+    public List<Student> searchStudents(String firstName, String lastName, Integer id, String email) {
+        if (id != null) {
+            Optional<Student> studentById = studentRepository.findById(id);
+            if (studentById.isPresent()) {
+                return Collections.singletonList(studentById.get());
+            } else {
+                return Collections.emptyList();
+            }
+//        } else if (firstName != null && lastName != null) {
+//            return studentRepository.findStudentsByFirstNameAndLastName(firstName, lastName);
+        } else if (email != null) {
+            return studentRepository.findStudentsByEmail(email);
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
 }

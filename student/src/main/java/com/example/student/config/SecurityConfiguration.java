@@ -34,8 +34,22 @@ public class SecurityConfiguration {
                         .permitAll()
                         .requestMatchers("api/v1/admin").hasAnyAuthority(Role.ADMIN.name())
                         .requestMatchers("api/v1/user").hasAnyAuthority(Role.USER.name())
-                        .requestMatchers("class/detail/{student_id}").hasAnyAuthority(Role.USER.name())
-                        .requestMatchers("api/v1/user/me").hasAnyAuthority(Role.USER.name(),Role.ADMIN.name())
+                        .requestMatchers("api/v1/teacher/").hasAnyAuthority(Role.ADMIN.name())
+                        .requestMatchers("api/v1/student").hasAnyAuthority(Role.ADMIN.name(),Role.TEACHER.name())
+
+
+
+
+                        .requestMatchers("api/v1/class/").hasAnyAuthority(Role.ADMIN.name(),Role.TEACHER.name())
+                        .requestMatchers("api/v1/class/{id}").hasAnyAuthority(Role.ADMIN.name(),Role.TEACHER.name())
+                        .requestMatchers("api/v1/class/update/{id}").hasAnyAuthority(Role.ADMIN.name(),Role.TEACHER.name())
+                        .requestMatchers("api/v1/class/delete/{id}").hasAnyAuthority(Role.ADMIN.name(),Role.TEACHER.name())
+                        .requestMatchers("api/v1/class/{classId}/delete/{studentId}").hasAnyAuthority(Role.ADMIN.name(),Role.TEACHER.name())
+
+                        .requestMatchers("api/v1/class/detail/{student_id}").hasAnyAuthority(Role.USER.name(),Role.ADMIN.name(),Role.TEACHER.name())
+                        .requestMatchers("api/v1/student/detail/{class_id}").hasAnyAuthority(Role.USER.name(),Role.ADMIN.name(),Role.TEACHER.name())
+
+                        .requestMatchers("api/v1/user/me").hasAnyAuthority(Role.USER.name(),Role.ADMIN.name(),Role.TEACHER.name())
                         .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider()).addFilterBefore(

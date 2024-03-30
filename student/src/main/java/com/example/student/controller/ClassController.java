@@ -12,45 +12,33 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/class")
+@RequestMapping("/api/v1/class")
 @CrossOrigin
 public class ClassController {
     @Autowired
     private ClassService classService ;
 
-    @PostMapping("/add")
-    public String add(@RequestBody Class lophoc){
-        classService.saveClass(lophoc);
-        return "Đăng ký tài khoản thành công";
-    }
-
-//        @PostMapping("/login")
-//        public String login(@RequestBody Student student) {
-//            boolean isAuthenticated = studentService.login(student.getUsername(), student.getPassword());
-//            if (isAuthenticated) {
-//                return "Đăng nhập thành công!";
-//            } else {
-//                return "Sai tài khoản hoặc mật khẩu";
-//            }
-//        }
-
-    @GetMapping("/getAll")
+    //Thông tin tất cả các lớp
+    //Tìm kiếm theo ....
+    @GetMapping("")
     public List<Class> getAllClass() {
         return classService.getAllClass();
     }
 
-
+    // Cập nhật thông tin lớp
     @PutMapping("/update/{id}")
     public String updateClass(@PathVariable int id, @RequestBody Class updatedClass) {
         classService.updateClass(id, updatedClass);
         return "Cập nhật lớp học thành công";
     }
 
+    //Xoá lớp
     @DeleteMapping("/delete/{id}")
     public String deleteClass(@PathVariable int id) {
         classService.deleteClass(id);
         return "Xoá lớp học thành công";
     }
+
     //Get class theo id
     @GetMapping("/{id}")
     public ResponseEntity<Class> getClassById(@PathVariable int id) {
@@ -61,6 +49,8 @@ public class ClassController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    //Lấy thông tin về các lớp mà học sinh học
     @GetMapping("/detail/{student_id}")
     public ResponseEntity<List<Class>> getClassesByStudentId(@PathVariable int student_id) {
         List<Class> classes = classService.getClassesByStudentId(student_id);
@@ -70,6 +60,7 @@ public class ClassController {
         return new ResponseEntity<>(classes, HttpStatus.OK);
     }
 
+    //Thông tin cụ thể về một lớp
     @GetMapping("/information/{id}")
     public ResponseEntity<Class> getClassInformationById(@PathVariable int id) {
         Optional<Class> optionalClass = classService.getClassById(id);
@@ -80,4 +71,16 @@ public class ClassController {
         }
     }
 
+    //Xoá student_id ra khỏi class_id
+    @DeleteMapping("/{classId}/delete/{studentId}")
+    public ResponseEntity<String> removeStudentFromClass(@PathVariable int classId, @PathVariable int studentId) {
+        try {
+            classService.removeStudentFromClass(classId, studentId);
+            return ResponseEntity.ok("Sinh viên đã được xóa khỏi lớp học thành công");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Đã xảy ra lỗi khi xóa sinh viên khỏi lớp học");
+        }
+    }
 }

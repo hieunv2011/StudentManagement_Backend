@@ -12,7 +12,7 @@
     import java.util.Optional;
 
     @RestController
-    @RequestMapping("/student")
+    @RequestMapping("api/v1/student")
     @CrossOrigin
     public class StudentController {
         @Autowired
@@ -34,10 +34,10 @@
 //            }
 //        }
 
-        @GetMapping("/getAll")
-        public List<Student> getAllStudents() {
-            return studentService.getAllStudent();
-        }
+//        @GetMapping("/getAll")
+//        public List<Student> getAllStudents() {
+//            return studentService.getAllStudent();
+//        }
 
         @GetMapping("/detail/{class_id}")
         public ResponseEntity<List<Student>> getStudentsByClassId(@PathVariable int class_id) {
@@ -54,6 +54,20 @@
                 return ResponseEntity.ok(optionalStudent.get());
             } else {
                 return ResponseEntity.notFound().build();
+            }
+        }
+
+        @GetMapping("")
+        public List<Student> searchStudents(
+                @RequestParam(required = false) Integer id,
+                @RequestParam(required = false) String email
+        ) {
+            if (id == null && (email == null || email.isEmpty())) {
+                // Nếu không có id hoặc email được cung cấp, trả về tất cả sinh viên
+                return studentService.getAllStudent();
+            } else {
+                // Nếu có id hoặc email được cung cấp, sử dụng phương thức searchStudents để tìm kiếm
+                return studentService.searchStudents(null, null, id, email);
             }
         }
 

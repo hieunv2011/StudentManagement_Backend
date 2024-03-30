@@ -3,10 +3,13 @@ package com.example.student.service;
 import com.example.student.model.Class;
 import com.example.student.model.Student;
 import com.example.student.repository.ClassRepository;
+import com.example.student.repository.StudentRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,6 +18,9 @@ public class ClassServiceImpl implements ClassService {
 
     @Autowired
     private ClassRepository classRepository;
+
+    @Autowired
+    private StudentRepository studentRepository;
     @Override
     public Class saveClass(Class lophoc) {
         return classRepository.save(lophoc);
@@ -37,13 +43,30 @@ public class ClassServiceImpl implements ClassService {
         Optional<Class> optionalClass = classRepository.findById(id);
         if (optionalClass.isPresent()) {
             Class existingClass = optionalClass.get();
-            existingClass.setMahocphan(updatedClass.getMahocphan());
-            existingClass.setMalop(updatedClass.getMalop());
-            existingClass.setRoom(updatedClass.getRoom());
-            existingClass.setStudentnumber(updatedClass.getStudentnumber());
-//            existingClass.setTeachername(updatedClass.getTeachername());
-            existingClass.setTime(updatedClass.getTime());
-
+            if (updatedClass.getMahocphan() != null && !updatedClass.getMahocphan().isEmpty()) {
+                existingClass.setMahocphan(updatedClass.getMahocphan());
+            }
+            if (updatedClass.getMalop() != null && !updatedClass.getMalop().isEmpty()){
+                existingClass.setMalop(updatedClass.getMalop());
+            }
+            if (updatedClass.getRoom() != null) {
+                existingClass.setRoom(updatedClass.getRoom());
+            }
+            if (updatedClass.getStudentnumber() != null) {
+                existingClass.setStudentnumber(updatedClass.getStudentnumber());
+            }
+            if (updatedClass.getTime() != null) {
+                existingClass.setTime(updatedClass.getTime());
+            }
+            if (updatedClass.getRoom() != null) {
+                existingClass.setRoom(updatedClass.getRoom());
+            }
+            if (updatedClass.getStudentnumber() != null) {
+                existingClass.setStudentnumber(updatedClass.getStudentnumber());
+            }
+            if (updatedClass.getTime() != null) {
+                existingClass.setTime(updatedClass.getTime());
+            }
             return classRepository.save(existingClass);
         } else {
             throw new IllegalArgumentException("Class with id " + id + " not found.");
@@ -68,4 +91,11 @@ public class ClassServiceImpl implements ClassService {
     public Optional<Class> getClassInformationById(int id) {
         return classRepository.findById(id);
     }
+
+    @Override
+    @Transactional
+    public void removeStudentFromClass(int classId, int studentId) {
+        classRepository.removeStudentFromClass(classId, studentId);
+    }
+
 }

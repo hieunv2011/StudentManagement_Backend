@@ -22,6 +22,8 @@ public class Class {
     private String studentnumber;
 //    private String teachername;
     private String time;
+    private String doclink;
+    private String vidlink;
 
     @JsonIgnore
     @ManyToMany
