@@ -49,24 +49,16 @@ public class ClassServiceImpl implements ClassService {
             if (updatedClass.getMalop() != null && !updatedClass.getMalop().isEmpty()){
                 existingClass.setMalop(updatedClass.getMalop());
             }
-            if (updatedClass.getRoom() != null) {
+            if (updatedClass.getRoom() != null  && !updatedClass.getRoom().isEmpty()){
                 existingClass.setRoom(updatedClass.getRoom());
             }
-            if (updatedClass.getStudentnumber() != null) {
+            if (updatedClass.getStudentnumber() != null  && !updatedClass.getStudentnumber().isEmpty()) {
                 existingClass.setStudentnumber(updatedClass.getStudentnumber());
             }
-            if (updatedClass.getTime() != null) {
+            if (updatedClass.getTime() != null  && !updatedClass.getTime().isEmpty()) {
                 existingClass.setTime(updatedClass.getTime());
             }
-            if (updatedClass.getRoom() != null) {
-                existingClass.setRoom(updatedClass.getRoom());
-            }
-            if (updatedClass.getStudentnumber() != null) {
-                existingClass.setStudentnumber(updatedClass.getStudentnumber());
-            }
-            if (updatedClass.getTime() != null) {
-                existingClass.setTime(updatedClass.getTime());
-            }
+
             return classRepository.save(existingClass);
         } else {
             throw new IllegalArgumentException("Class with id " + id + " not found.");
@@ -96,6 +88,51 @@ public class ClassServiceImpl implements ClassService {
     @Transactional
     public void removeStudentFromClass(int classId, int studentId) {
         classRepository.removeStudentFromClass(classId, studentId);
+    }
+
+    @Override
+    public List<Class> searchClassByCodes(String mahocphan, String malop) {
+        if (mahocphan != null && malop != null) {
+            return classRepository.findClassesByMahocphanAndMalop(mahocphan, malop);
+        } else if (mahocphan != null) {
+            return classRepository.findClassesByMahocphan(mahocphan);
+        } else if (malop != null) {
+            return classRepository.findClassesByMalop(malop);
+        } else {
+            return classRepository.findAll();
+        }
+    }
+
+    @Override
+    public void addStudentToClass(int classId, int studentId) {
+        // Tìm lớp học theo ID
+        Optional<Class> optionalClass = classRepository.findById(classId);
+        if (optionalClass.isPresent()) {
+            Class classroom = optionalClass.get();
+
+            // Tìm sinh viên theo ID
+            Optional<Student> optionalStudent = studentRepository.findById(studentId);
+            if (optionalStudent.isPresent()) {
+                Student student = optionalStudent.get();
+
+                // Lấy danh sách sinh viên hiện tại của lớp học
+                List<Student> students = classroom.getStudents();
+
+                // Kiểm tra xem sinh viên đã tồn tại trong lớp học chưa
+                if (!students.contains(student)) {
+                    // Thêm sinh viên vào danh sách sinh viên của lớp học
+                    students.add(student);
+                    classroom.setStudents(students);
+                    classRepository.save(classroom);
+                } else {
+                    throw new IllegalArgumentException("Sinh viên đã tồn tại trong lớp học");
+                }
+            } else {
+                throw new IllegalArgumentException("Sinh viên không tồn tại");
+            }
+        } else {
+            throw new IllegalArgumentException("Lớp học không tồn tại");
+        }
     }
 
 }

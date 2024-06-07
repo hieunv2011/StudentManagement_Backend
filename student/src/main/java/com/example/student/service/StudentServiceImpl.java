@@ -4,7 +4,9 @@ import com.example.student.model.Student;
 import com.example.student.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -56,6 +58,30 @@ public class StudentServiceImpl implements StudentService {
         } else {
             return Collections.emptyList();
         }
+    }
+
+    @Override
+    public Student saveStudentWithImage(int studentId, MultipartFile file) throws IOException {
+        Optional<Student> optionalStudent = studentRepository.findById(studentId);
+        if (optionalStudent.isPresent()) {
+            Student student = optionalStudent.get();
+            student.setProfileImage(file.getBytes());
+            return studentRepository.save(student);
+        }
+        return null;
+    }
+
+    @Override
+    public byte[] getStudentImage(int studentId) {
+        Optional<Student> optionalStudent = studentRepository.findById(studentId);
+        return optionalStudent.map(Student::getProfileImage).orElse(null);
+    }
+
+
+    //Add student
+    @Override
+    public Student addStudent(Student student) {
+        return studentRepository.save(student);
     }
 
 }

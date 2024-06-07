@@ -17,5 +17,8 @@ public interface ClassService {
     Optional<Class> getClassInformationById(int id);
 
     void removeStudentFromClass(int classId, int studentId);
+    List<Class> searchClassByCodes(String mahocphan, String malop);
+
+    void addStudentToClass(int classId, int studentId);
 
 }

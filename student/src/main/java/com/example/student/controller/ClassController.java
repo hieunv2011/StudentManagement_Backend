@@ -20,10 +20,10 @@ public class ClassController {
 
     //Thông tin tất cả các lớp
     //Tìm kiếm theo ....
-    @GetMapping("")
-    public List<Class> getAllClass() {
-        return classService.getAllClass();
-    }
+    //    @GetMapping("")
+    //    public List<Class> getAllClass() {
+    //        return classService.getAllClass();
+    //    }
 
     // Cập nhật thông tin lớp
     @PutMapping("/update/{id}")
@@ -83,4 +83,36 @@ public class ClassController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Đã xảy ra lỗi khi xóa sinh viên khỏi lớp học");
         }
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Class>> searchClassByCodes(@RequestParam(required = false) String mahocphan, @RequestParam(required = false) String malop) {
+        // Kiểm tra nếu mahocphan là chuỗi rỗng, gán giá trị null cho nó
+        if (mahocphan != null && mahocphan.isEmpty()) {
+            mahocphan = null;
+        }
+        if (malop != null && malop.isEmpty()) {
+            malop = null;
+        }
+        if (mahocphan == null && malop == null) {
+            return ResponseEntity.ok(classService.getAllClass());
+        } else {
+            List<Class> classes = classService.searchClassByCodes(mahocphan, malop);
+            if (classes.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(classes, HttpStatus.OK);
+        }
+    }
+
+    @PostMapping("/{classId}/add/{studentId}")
+    public ResponseEntity<String> addStudentToClass(@PathVariable int classId, @PathVariable int studentId) {
+        try {
+            classService.addStudentToClass(classId, studentId);
+            return ResponseEntity.ok("Sinh viên đã được thêm vào lớp học thành công");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
 }

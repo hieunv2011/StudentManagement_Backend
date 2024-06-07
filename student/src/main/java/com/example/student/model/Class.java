@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -15,6 +17,7 @@ public class Class {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     private String mahocphan;
     private String malop;
     private String tenhocphan;
@@ -42,4 +45,6 @@ public class Class {
             inverseJoinColumns = @JoinColumn(name = "teacher_id")
     )
     private List<Teacher> teachers;
+
+
 }

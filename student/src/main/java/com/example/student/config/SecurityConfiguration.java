@@ -19,10 +19,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@CrossOrigin
 public class SecurityConfiguration {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private  final UserService userService;
@@ -35,19 +37,38 @@ public class SecurityConfiguration {
                         .requestMatchers("api/v1/admin").hasAnyAuthority(Role.ADMIN.name())
                         .requestMatchers("api/v1/user").hasAnyAuthority(Role.USER.name())
                         .requestMatchers("api/v1/teacher/").hasAnyAuthority(Role.ADMIN.name())
+                        .requestMatchers("api/v1/grade/").hasAnyAuthority(Role.ADMIN.name())
                         .requestMatchers("api/v1/student").hasAnyAuthority(Role.ADMIN.name(),Role.TEACHER.name())
 
 
 
 
                         .requestMatchers("api/v1/class/").hasAnyAuthority(Role.ADMIN.name(),Role.TEACHER.name())
+                        .requestMatchers("api/v1/class/search").hasAnyAuthority(Role.ADMIN.name(),Role.TEACHER.name())
                         .requestMatchers("api/v1/class/{id}").hasAnyAuthority(Role.ADMIN.name(),Role.TEACHER.name())
                         .requestMatchers("api/v1/class/update/{id}").hasAnyAuthority(Role.ADMIN.name(),Role.TEACHER.name())
                         .requestMatchers("api/v1/class/delete/{id}").hasAnyAuthority(Role.ADMIN.name(),Role.TEACHER.name())
                         .requestMatchers("api/v1/class/{classId}/delete/{studentId}").hasAnyAuthority(Role.ADMIN.name(),Role.TEACHER.name())
+                        .requestMatchers("api/v1/class/{classId}/add/{studentId}").hasAnyAuthority(Role.ADMIN.name(),Role.TEACHER.name())
+
 
                         .requestMatchers("api/v1/class/detail/{student_id}").hasAnyAuthority(Role.USER.name(),Role.ADMIN.name(),Role.TEACHER.name())
                         .requestMatchers("api/v1/student/detail/{class_id}").hasAnyAuthority(Role.USER.name(),Role.ADMIN.name(),Role.TEACHER.name())
+                        .requestMatchers("api/v1/student/{id}").hasAnyAuthority(Role.ADMIN.name(),Role.TEACHER.name())
+
+                        .requestMatchers("api/v1/student/{id}/uploadImage").hasAnyAuthority(Role.ADMIN.name(),Role.TEACHER.name())
+                        .requestMatchers("api/v1/student/{id}/image").hasAnyAuthority(Role.ADMIN.name(),Role.TEACHER.name())
+                        .requestMatchers("api/v1/student/add").hasAnyAuthority(Role.ADMIN.name(),Role.TEACHER.name())
+
+
+                        .requestMatchers("api/v1/grade/copyData").hasAnyAuthority(Role.ADMIN.name())
+                        .requestMatchers("api/v1/grade/class/{clazz}").hasAnyAuthority(Role.ADMIN.name())
+                        .requestMatchers("api/v1/grade/student/{student}").hasAnyAuthority(Role.ADMIN.name())
+                        .requestMatchers("api/v1/grade/{clazz}/{student}/giuaky").hasAnyAuthority(Role.ADMIN.name())
+                        .requestMatchers("api/v1/grade/{clazz}/{student}/cuoiky").hasAnyAuthority(Role.ADMIN.name())
+
+
+
 
                         .requestMatchers("api/v1/user/me").hasAnyAuthority(Role.USER.name(),Role.ADMIN.name(),Role.TEACHER.name())
                         .anyRequest().authenticated())

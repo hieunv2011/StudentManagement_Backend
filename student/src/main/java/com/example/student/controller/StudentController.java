@@ -7,7 +7,9 @@
     import org.springframework.http.HttpStatus;
     import org.springframework.http.ResponseEntity;
     import org.springframework.web.bind.annotation.*;
+    import org.springframework.web.multipart.MultipartFile;
 
+    import java.io.IOException;
     import java.util.List;
     import java.util.Optional;
 
@@ -70,5 +72,31 @@
                 return studentService.searchStudents(null, null, id, email);
             }
         }
+
+        @PostMapping("/{id}/uploadImage")
+        public ResponseEntity<Student> uploadStudentImage(@PathVariable int id, @RequestParam("file") MultipartFile file) {
+            try {
+                Student student = studentService.saveStudentWithImage(id, file);
+                return new ResponseEntity<>(student, HttpStatus.CREATED);
+            } catch (IOException e) {
+                return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+
+        @GetMapping("/{id}/image")
+        public ResponseEntity<byte[]> getStudentImage(@PathVariable int id) {
+            byte[] image = studentService.getStudentImage(id);
+            if (image != null) {
+                return ResponseEntity.ok().contentType(org.springframework.http.MediaType.IMAGE_JPEG).body(image);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        }
+
+        //Add
+//        @PostMapping("/add")
+//        public Student addStudent(@RequestBody Student student) {
+//            return studentService.addStudent(student);
+//        }
 
     }

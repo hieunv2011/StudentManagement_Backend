@@ -5,8 +5,11 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.catalina.valves.StuckThreadDetectionValve;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -22,7 +25,12 @@ public class Student {
     private String firstName;
     private String lastName;
 
+    @Lob
+    @Column(name = "profile_image", columnDefinition = "LONGBLOB")
+    private byte[] profileImage;
+
     @JsonIgnore
     @ManyToMany(mappedBy = "students")
     private List<Class> classes;
+
 }

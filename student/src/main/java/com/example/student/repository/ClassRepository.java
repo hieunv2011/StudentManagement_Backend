@@ -20,5 +20,9 @@ public interface ClassRepository extends JpaRepository<Class, Integer> {
     @Query(value = "DELETE FROM class_students WHERE class_id = :classId AND student_id = :studentId", nativeQuery = true)
     void removeStudentFromClass(@Param("classId") int classId, @Param("studentId") int studentId);
 
+    List<Class> findClassesByMahocphanAndMalop(String mahocphan, String malop);
+    List<Class> findClassesByMahocphan(String mahocphan);
+    List<Class> findClassesByMalop(String malop);
+
 }
 
